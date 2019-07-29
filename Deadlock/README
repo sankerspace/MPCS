@@ -1,0 +1,10 @@
+MPC_Generator is a prototype of a generator which constructs 
+between n Nodes all possible Permutations/Cases of Communication Lists 
+for all n nodes.
+<restricted to n-1 communication at every i-th node, so one arbitrary node cannot have n-2 communications>
+
+One MPC (Multi-partner Communication) instance is a generation of n  Comm-Lists 
+which describes their Communication to each other at every cycle.
+at every Cycle all lists from every node ist started again.
+
+MPC_Generator tries to create a text file with ALL possible MPC instances created for n nodes
