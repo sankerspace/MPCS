@@ -75,8 +75,24 @@ int Graph::addEdge(int src,int dst,int value)
     
 }
 
+/**************************************************/
+
+//returns status of Directed Mode
+bool Graph::setDirectedMode(void)
+{
+	this->directed=true;
+	return true;
+}
+
+//returns status of Directed Mode
+bool Graph::setUndirectedMode(void)
+{
+	this->directed=false;
+	return false;
+}
 
 
+/**************************************************/
 bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found)
 {
         
