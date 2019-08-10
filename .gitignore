@@ -1,5 +1,7 @@
 *.json
 *.swp
 *.swo
+TestGraph
+*.o
 
 

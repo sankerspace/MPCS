@@ -20,8 +20,9 @@ class Graph
 {
 private:
 
-    std::vector<std::vector<std::pair<int,int>>> adjList;
-    int N,E;//number of nodes N,edges E
+    std::vector<std::vector<std::pair<std::pair<int,int>,bool> >> adjList;
+
+    int N,E_undirect; //number of nodes N,edges E
 	/*mode of the graph - directed or undirected
 	*  - directed: every occurence in the vector handled "as one direction"
 	*  - undirected: ever occurence in the vector handled as a connection(in both ways)
@@ -42,14 +43,14 @@ public:
     Graph(bool directed=true) 
     {
         N=0;
-        E=0;
+        E_undirect=0;
 		this->directed=directed;
     };
     
 	/*XXXXXXXXXXXXXXXXXXXXXXXXX TEST XXXXXXXXXXXXXXXXXXXXXXXXXX*/
 	// Graph Constructor
 	//# of nodes = N
-	Graph(std::vector<Edge> const &edges, int N,bool directed=true)
+/*	Graph(std::vector<Edge> const &edges, int N,bool directed=true)
 	{
 		this->directed=directed;
 		// resize the vector to N elements of type vector<int>
@@ -58,17 +59,28 @@ public:
 		// add edges to the directed graph
 		for (auto &edge: edges)
 		{
-		    std::pair<int,int> pair(edge.dest,edge.value);
-			// insert at the end
-			//adjList[edge.src].push_back(edge.dest);
-            adjList[edge.src].push_back(pair);//have to be sorted!!!!!!!!!!!!!!
+		    std::pair<int,int> pair_1(edge.dest,edge.value);
+		    std::pair<std::pair<int,int>, bool> pair_2(pair_1,true);
+            
+		    std::pair<int,int> pair_3(edge.src,edge.value);
+		    std::pair<std::pair<int,int>, bool> pair_4(pair_3,false);
+			if(directed)
+			{
+				// insert at the end
+				//adjList[edge.src].push_back(edge.dest);
+				adjList[edge.src].push_back(pair);//have to be sorted!!!!!!!!!!!!!!
 
-			this->E++;
+				this->E++;
 
+			
+			}else
+			{
+			
+			}
 			// Uncomment below line for undirected graph
 			// adjList[edge.dest].push_back(edge.src);
 		}
-	};
+	};*/
 	
 	
 	int getNodeNumber(void);
@@ -82,6 +94,7 @@ public:
     /*an edge_value of zero means, no restriction*/
     bool findCircles(int edge_value);
 
+	bool getMode(void);
 	bool setDirectedMode(void); //interpret edges as directed
 	bool setUndirectedMode(void); //interpret edges as undirected
 };

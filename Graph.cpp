@@ -10,17 +10,41 @@
 void  Graph::printGraph(void)
 {
     std::cout << "Display Graph informations:"<< std::endl;
+
     std::cout << "Number of Nodes: "<<  N << std::endl;
-    std::cout << "Number of Edges: "<<  E << std::endl<< std::endl;
-    
-	for (unsigned i = 0; i < N; i++)
+	if(directed)
+	{
+		
+		std::cout << "Direction Mode:"<< "DIRECTED" <<std::endl;
+		std::cout << "Number of Edges: "<<  E_undirect/2 << std::endl<< std::endl;
+	}else{
+
+		std::cout << "Direction Mode:"<< "UNDIRECTED" <<std::endl;
+		std::cout << "Number of Edges: "<<  E_undirect << std::endl<< std::endl;
+	}
+	for(unsigned i = 0; i < N; i++)
 	{
 		// print current vertex number
 		//std::cout << i << " --> ";
 
 		// print all neighboring vertices of vertex i
-		for (std::pair<int,int> v : adjList[i])
-			std::cout << i << " --> " << v.first << " ("<<v.second<<")"<<std::endl;
+	
+		if(directed==true) 
+		{
+			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
+			{
+				if((v.first).second==true)
+					std::cout << i << " --> " << (v.first).first << " ("<< (v.first).second <<")"<<std::endl; 		
+			}
+		}else{
+		
+			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
+			{	//maybe duplicated if several same connections !!!!!!!!!!!!!!!!!!!!!!!!!!
+				std::cout << i << " -- " << (v.first).first << " ("<<(v.first).second<<")"<<std::endl; 		
+			}
+		}
+		
+		
 		std::cout << std::endl;
 	}
 }
@@ -38,40 +62,57 @@ int Graph::getNodeNumber(void)
 /**************************************************/
 int Graph::getEdgeNumber(void)
 {
-    //int n=0;
-    //for (unsigned i = 0; i < N; i++)
-	//{
-	//	n+=adjList[i].size();
-	//}
-	
+	int E;
+	if(directed)
+		E=E_undirect/2;
+	else
+		E=E_undirect;
+
 	return E;
 }
 
 /**************************************************/
 int Graph::addNode(void)
 {
-    std::vector<std::pair<int,int>> v;
+	std::vector<std::pair<std::pair<int,int>,bool>> v;
+	
     adjList.push_back(v);
     this->N+=1;
     return this->N;
-} 
+}
 
-//for src and dst no index values
+/**************************************************/
+//src -> dst always  stored,whenever directed or undirected mode
+//ŝrc and dst are index values
 int Graph::addEdge(int src,int dst,int value)
 {
-    if(src<N && dst < N && value>0)
+    if(src<N && dst < N && value>0 && src!=dst )
     {       
-        for(std::pair<int,int> p: adjList[src])
+        for(std::pair<std::pair<int,int>,bool> p: adjList[src])
         {
-           if(p.first==dst)
-            return -1;
+           if((p.first).first==dst)
+            return -1;//check for existing edge
         }
-        std::pair<int,int> p(dst,value);
-        adjList[src].push_back(p);
-        E++;
-        return  E;
+		if(directed)
+		{   //only consider directed edge,opposite is for info purpose		
+			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
+			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
+	
+			adjList[src].push_back(p1);
+			adjList[dst].push_back(p2);
+		}else{
+			//consider both direction edges,because of undirected Mode
+			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
+			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),true);
+			
+			adjList[src].push_back(p1);
+			adjList[dst].push_back(p2);
+		}
+		
+		E_undirect+=2;
+        return  E_undirect;
     }
-    return -2;
+    return -2;//index not valid
     
 }
 
@@ -92,6 +133,11 @@ bool Graph::setUndirectedMode(void)
 }
 
 
+bool Graph::getMode(void)
+{
+	return this->directed;
+}
+
 /**************************************************/
 bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found)
 {
@@ -104,28 +150,62 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
     return true;//found cycle
    }
    visited[node]=true;
-   for (std::pair<int,int> p: adjList[node])
+   if(directed)
+   {/************* DIRECTED **********************/
+	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+	   {
+		 if(value>0)//if edge value important
+		 {  //edge value corresponds  and its a valid directed edge
+			if((p.first).second==value && p.second==true )
+			{
+				if(dsv((p.first).first,value,visited,finished,found))
+				{
+					found.push_back(node);
+					return true;
+				}
+			}   
+		 }
+		 else
+		 {
+					
+			if(p.second==true )
+			{		
+				if(dsv((p.first).first,0,visited,finished,found))
+				{
+					found.push_back(node);
+					return true;
+				}
+			}
+		 
+		 }
+	   }
+   }else
    {
-     if(value>0)
-     {
-        if(p.second==value)
-        {
-            if(dsv(p.first,value,visited,finished,found))
-            {
-                found.push_back(node);
-                return true;
-            }
-        }   
-     }
-     else
-     {
-        if(dsv(p.first,0,visited,finished,found))
-        {
-            found.push_back(node);
-            return true;
-        }
-     
-     }
+	   /************* UNDIRECTED **********************/
+	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+	   {
+		 if(value>0)//if edge value important
+		 {  //edge value corresponds  and its a valid directed edge
+			if((p.first).second==value)
+			{
+				if(dsv((p.first).first,value,visited,finished,found))
+				{
+					found.push_back(node);
+					return true;
+				}
+			}   
+		 }
+		 else
+		 {
+					
+			 if(dsv((p.first).first,0,visited,finished,found))
+			 {
+				 found.push_back(node);
+				 return true;
+			 }
+		 
+		 }
+	   }
    }
    finished[node]=true; 
    return false; 
@@ -164,19 +244,22 @@ bool Graph::findCircles(int edge_value)
         ret=dsv(i,edge_value, visited, finished,found);
         if (ret)
         {   
-            #ifdef dbg_graph_findcircle
-            std::cout << "Graph::findCircles::found circle  with edge_value "<< edge_value <<"::";
+#ifdef dbg_graph_findcircle
+            std::cout << "Graph::findCircles::found circle with edge_value "<< edge_value <<  
+				"from node "<< i << "::";
             for (std::vector<int>::const_iterator j = found.begin(); j != found.end(); ++j)
                 std::cout << *j << ' ';
             std::cout << std::endl;
-            #endif
-            return true;
+#else
+			return true;
+#endif
+            ret=true;
         }
     }
     
-    return false;
+    return ret;
 }
 
 
 		
-
+;

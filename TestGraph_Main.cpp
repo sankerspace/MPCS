@@ -18,7 +18,9 @@ using  namespace std;
 
 #else
 
-  #include <stdio.h>
+  #include <cstdio>
+
+
 
   void ClearScreen()
     {
@@ -47,6 +49,7 @@ int main(int argc,char** argv) {
 	    std::cout<<"new (e)dge"<< std::endl;
 	    std::cout<<"(p)rint Graph"<< std::endl;
 	    std::cout<<"(f)ind Circles"<< std::endl;
+	    std::cout<<"(m)ode change"<< std::endl;
 	    std::cout<<"(c)lose Program"<< std::endl;
 	   
 	   cin >> c;
@@ -90,6 +93,20 @@ int main(int argc,char** argv) {
 	        std::cout<<std::endl<<"[ENTER]"<<std::endl;
 	        cin.get();
 	        }
+	        break;
+	        
+	    case 'm':
+	         std::cout<<std::endl<<"Change Mode"<<std::endl;
+			 if(g.getMode()){
+				 g.setUndirectedMode();
+				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now."<<std::endl;
+			 }else{
+
+				 std::cout<<std::endl<<"Graph in DIRECTED Mode now."<<std::endl;
+				 g.setDirectedMode();
+			 }
+			 std::cout<<std::endl<<"[ENTER]"<<std::endl;
+	         cin.get();
 	        break;
 	        
 	    case 'c':
