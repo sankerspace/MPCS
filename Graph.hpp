@@ -19,8 +19,10 @@ struct Edge {
 class Graph
 {
 private:
-
-    std::vector<std::vector<std::pair<std::pair<int,int>,bool> >> adjList;
+	
+		
+	typedef std::pair<std::pair<int,int>,bool> Pair_PairofInt_Bool;
+	std::vector<std::vector<Pair_PairofInt_Bool>> adjList;
 
     int N,E_undirect; //number of nodes N,edges E
 	/*mode of the graph - directed or undirected
@@ -32,6 +34,8 @@ private:
     /*recursively search for path and mark as visited */
     /*if during search we found  a already marked one, return true*/
 	/*XXXXXXXXXXXXXXXXXXXXcheck itXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx*/
+	
+	void insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p);
     bool dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found);
 public:
 	// construct a vector of vectors to represent an adjacency list

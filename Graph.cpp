@@ -80,6 +80,31 @@ int Graph::addNode(void)
     this->N+=1;
     return this->N;
 }
+/****************************************************/
+void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
+{
+	
+	if(adjList[index].size()>0 )
+	{	bool inserted_Pair=false;
+		for (auto it=adjList[index].begin(); it<adjList[index].end(); it++)
+		{
+			if(((*it).first).first >= (p.first).first)
+			{
+				adjList[index].insert(it,p);
+				inserted_Pair=true;
+			}
+		}
+		if(!inserted_Pair)
+			adjList[index].push_back(p);
+
+	}else
+	{
+		adjList[index].push_back(p);
+	}
+}
+
+
+
 
 /**************************************************/
 //src -> dst always  stored,whenever directed or undirected mode
@@ -87,20 +112,44 @@ int Graph::addNode(void)
 int Graph::addEdge(int src,int dst,int value)
 {
     if(src<N && dst < N && value>0 && src!=dst )
-    {       
-        for(std::pair<std::pair<int,int>,bool> p: adjList[src])
-        {
-           if((p.first).first==dst)
-            return -1;//check for existing edge
-        }
+    {   
+		bool edge_added=false;//if new edge added, a sorting should be performed
+		bool undirected_exists_counterpart=false;	
 		if(directed)
 		{   //only consider directed edge,opposite is for info purpose		
+			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
+			{//it should be checked if undirected or directed mode
+			 //in "DIRECTED" mode check if edge is available and undirected and change it to a directed edge 
+				if((p.first).first==dst && (p.first).second==value)
+				{	
+					if(p.second)
+					{//its a directed ede
+						return 	E_undirect;//nothing changed,return same number of edges
+					}else
+					{//its a undirected edge
+						p.second=true;//make edge directed
+						return E_undirect;//return same number of edges	
+					}
+				}
+			}
+
+
 			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
 			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
-	
-			adjList[src].push_back(p1);
-			adjList[dst].push_back(p2);
+			
+			insert_Pair_to_Vector(src,p1);
+			insert_Pair_to_Vector(dst,p2);
 		}else{
+			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
+			{//it should be checked if undirected or directed mode
+				//in "UNDIRECTED" mode check if edge is directed and change it to undirected otherwise
+				//if it is undirected there exists a counterpart which might be directed and should be changed to
+				//undirected
+
+				if((p.first).first==dst)
+					return -1;//check for existing edge
+			}
+
 			//consider both direction edges,because of undirected Mode
 			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
 			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),true);
@@ -262,4 +311,4 @@ bool Graph::findCircles(int edge_value)
 
 
 		
-;
+
