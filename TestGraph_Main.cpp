@@ -96,7 +96,7 @@ int main(int argc,char** argv) {
 	        break;
 	        
 	    case 'm':
-	         std::cout<<std::endl<<"Change Mode"<<std::endl;
+	         std::cout<<std::endl<<"Changing Mode..... "<<std::endl;
 			 if(g.getMode()){
 				 g.setUndirectedMode();
 				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now."<<std::endl;
