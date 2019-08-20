@@ -80,7 +80,9 @@ int main(int argc,char** argv) {
 	        {
 	        int edge_value=0;
 	        bool ret=false;
-	        std::cout<<"\tEnter defined weight for all edges:";
+			std::cout<<"\tSearch for cycles in the current defined Graph."<<std::endl;
+	        std::cout<<"\tCycles are searched explicit on edges wit specified edge value."<<std::endl;
+	        std::cout<<"\tEnter defined weight for all edges:[0 ignore edge values]"<<std::endl;
 	        std::cin>>edge_value;
 	        std::cout<<endl;
 	        ret=g.findCircles(edge_value);
@@ -101,9 +103,8 @@ int main(int argc,char** argv) {
 				 g.setUndirectedMode();
 				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now."<<std::endl;
 			 }else{
-
-				 std::cout<<std::endl<<"Graph in DIRECTED Mode now."<<std::endl;
 				 g.setDirectedMode();
+				 std::cout<<std::endl<<"Graph in DIRECTED Mode now."<<std::endl;
 			 }
 			 std::cout<<std::endl<<"[ENTER]"<<std::endl;
 	         cin.get();
