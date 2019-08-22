@@ -9,12 +9,12 @@
 // print adjacency list representation of graph
 void  Graph::printGraph(void)
 {
-    std::cout << "Display Graph informations:"<< std::endl;
+	std::cout << "Display Graph informations:"<< std::endl;
 
-    std::cout << "Number of Nodes: "<<  N << std::endl;
+	std::cout << "Number of Nodes: "<<  N << std::endl;
 	if(directed)
 	{
-		
+
 		std::cout << "Direction Mode:"<< "DIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_undirect/2 << std::endl<< std::endl;
 	}else{
@@ -22,32 +22,37 @@ void  Graph::printGraph(void)
 		std::cout << "Direction Mode:"<< "UNDIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_undirect << std::endl<< std::endl;
 	}
-	for(unsigned i = 0; i < N; i++)
-	{
-		// print current vertex number
-		//std::cout << i << " --> ";
 
-		// print all neighboring vertices of vertex i
-	
-		if(directed==true) 
+
+	if(directed==true) 
+	{
+
+		for(unsigned i = 0; i < N; i++)
 		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{
 				if((v.first).second==true)
-					std::cout << i << " --> " << (v.first).first << " ("<< (v.first).second <<")"<<std::endl; 		
+					std::cout << i << " -->> " << (v.first).first << " ("<< (v.first).second <<") || "; 		
 			}
-		}else{
-		
+			std::cout << std::endl;
+		}
+	}else{
+
+		for(unsigned i = 0; i < N; i++)
+		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{	//maybe duplicated if several same connections !!!!!!!!!!!!!!!!!!!!!!!!!!
-				std::cout << i << " -- " << (v.first).first << " ("<<(v.first).second<<")"<<std::endl; 		
+				std::cout << i << " --- " << (v.first).first << " ("<<(v.first).second<<") ||"; 		
 			}
+
+			std::cout << std::endl;
 		}
-		
-		
-		std::cout << std::endl;
 	}
+
+
+	std::cout << std::endl;
 }
+
 
 /**************************************************/
 int Graph::getNodeNumber(void)
