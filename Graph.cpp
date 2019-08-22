@@ -140,22 +140,51 @@ int Graph::addEdge(int src,int dst,int value)
 			insert_Pair_to_Vector(src,p1);
 			insert_Pair_to_Vector(dst,p2);
 		}else{
+			bool first_direct_available=false;
+			bool second_direct_available=false;
+			//check for available edges
 			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
 			{//it should be checked if undirected or directed mode
 				//in "UNDIRECTED" mode check if edge is directed and change it to undirected otherwise
 				//if it is undirected there exists a counterpart which might be directed and should be changed to
 				//undirected
 
-				if((p.first).first==dst)
-					return -1;//check for existing edge
-			}
+				if((p.first).first==dst && (p.first).second==value)
+				{
+					if(p.second==false)
+					{//its an info edge 
+						p.second=true; //add connection
+					}
 
-			//consider both direction edges,because of undirected Mode
-			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
-			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),true);
-			
-			adjList[src].push_back(p1);
-			adjList[dst].push_back(p2);
+					first_direct_available=true;
+				}
+			}
+			//check for available edges in the other direction
+			for(std::pair<std::pair<int,int>,bool> p: adjList[dst])
+			{//it should be checked if undirected or directed mode
+				//in "UNDIRECTED" mode check if edge is an info edge and change it to directed otherwise
+				//undirected
+
+				if((p.first).first==src && (p.first).second==value)
+				{
+					if(p.second==false)
+					{//its an info edge 
+						p.second=true; //add connection
+					}
+					second_direct_available=true;
+					
+				}
+			}
+			//add edges if not  already added
+			if(first_direct_available==false){
+				std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
+				insert_Pair_to_Vector(src,p1);	
+			}	
+			if(second_direct_available==false)
+			{
+				std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),true);
+				insert_Pair_to_Vector(dst,p2);
+			}
 		}
 		
 		E_undirect+=2;
