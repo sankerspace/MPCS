@@ -48,6 +48,7 @@ int main(int argc,char** argv) {
 	    std::cout<<"new (n)ode"<< std::endl;
 	    std::cout<<"new (e)dge"<< std::endl;
 	    std::cout<<"(p)rint Graph"<< std::endl;
+	    std::cout<<"print (t)able"<< std::endl;
 	    std::cout<<"(f)ind Circles"<< std::endl;
 	    std::cout<<"(m)ode change"<< std::endl;
 	    std::cout<<"(c)lose Program"<< std::endl;
@@ -70,6 +71,12 @@ int main(int argc,char** argv) {
 	        cin.get();
 	        break;
 	    
+	    case 't':
+	         g.printTable();
+	         std::cout<<std::endl<<"[ENTER]"<<std::endl;
+	         cin.get();
+	        break;
+	        
 	    case 'p':
 	         g.printGraph();
 	         std::cout<<std::endl<<"[ENTER]"<<std::endl;

@@ -36,8 +36,8 @@ private:
 	/*XXXXXXXXXXXXXXXXXXXXcheck itXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx*/
 	
 	void insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p);
-    bool dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found);
-public:
+    bool dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found,int root);
+	public:
 	// construct a vector of vectors to represent an adjacency list
 	//one vector represents the to a corresponding node adjacent nodes with an id (integer) and 
 	//edge has a value (int)
@@ -92,7 +92,7 @@ public:
 	int addNode(void); //returns actual number of nodes = index of new node
 	int addEdge(int src,int dst,int value);//returns actual number of edges	
     void printGraph(void);
-	
+	void printTable(void);	
 		
     /*find cricles from every node,but restricted on edges with value edge_value*/
     /*an edge_value of zero means, no restriction*/

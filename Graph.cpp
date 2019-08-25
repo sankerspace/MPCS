@@ -3,7 +3,22 @@
 
 
 //using namespace std;
-
+void Graph::printTable(void)
+{
+	
+	std::cout << "Display Connection Table" << std::endl;
+	std::cout << "Number of nodes:" << N <<std::endl;
+	for(unsigned i = 0; i < N; i++)
+	{
+		std::cout<<i<<": ";
+		for (std::pair<std::pair<int,int>,bool> v : adjList[i])
+		{
+			if((v.first).second==true)
+				std::cout <<" ,(" <<(v.first).first << ","<< (v.first).second <<")"; 		
+		}
+		std::cout << std::endl;
+	}
+}
 
 
 // print adjacency list representation of graph
@@ -91,7 +106,8 @@ void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 	
 	if(adjList[index].size()>0 )
 	{	bool inserted_Pair=false;
-		for (auto it=adjList[index].begin(); it<adjList[index].end(); it++)
+		//examine connection list of a node for already existing edge
+		for (auto it=adjList[index].begin(); it!=adjList[index].end(); ++it)
 		{
 			if(((*it).first).first >= (p.first).first)
 			{
@@ -118,13 +134,12 @@ int Graph::addEdge(int src,int dst,int value)
 {
     if(src<N && dst < N && value>0 && src!=dst )
     {   
-		bool edge_added=false;//if new edge added, a sorting should be performed
 		bool undirected_exists_counterpart=false;	
 		if(directed)
 		{   //only consider directed edge,opposite is for info purpose		
 			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
 			{//it should be checked if undirected or directed mode
-			 //in "DIRECTED" mode check if edge is available and undirected and change it to a directed edge 
+			 //in "DIRECTED" mode check if edge is available and if edge is undirected and change it to a directed edge 
 				if((p.first).first==dst && (p.first).second==value)
 				{	
 					if(p.second)
@@ -150,16 +165,12 @@ int Graph::addEdge(int src,int dst,int value)
 			//check for available edges
 			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
 			{//it should be checked if undirected or directed mode
-				//in "UNDIRECTED" mode check if edge is directed and change it to undirected otherwise
+				//in "UNDIRECTED" mode check if edge is  available and change it to directed otherwise
 				//if it is undirected there exists a counterpart which might be directed and should be changed to
 				//undirected
 
 				if((p.first).first==dst && (p.first).second==value)
 				{
-					if(p.second==false)
-					{//its an info edge 
-						p.second=true; //add connection
-					}
 
 					first_direct_available=true;
 				}
@@ -172,22 +183,18 @@ int Graph::addEdge(int src,int dst,int value)
 
 				if((p.first).first==src && (p.first).second==value)
 				{
-					if(p.second==false)
-					{//its an info edge 
-						p.second=true; //add connection
-					}
 					second_direct_available=true;
 					
 				}
 			}
 			//add edges if not  already added
 			if(first_direct_available==false){
-				std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
+				std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),false);
 				insert_Pair_to_Vector(src,p1);	
 			}	
 			if(second_direct_available==false)
 			{
-				std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),true);
+				std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
 				insert_Pair_to_Vector(dst,p2);
 			}
 		}
@@ -222,15 +229,22 @@ bool Graph::getMode(void)
 }
 
 /**************************************************/
-bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found)
+bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found,int root)
 {
         
    if (finished[node]==true)
     return false;
    if (visited[node]==true)
    {
-    found.push_back(node);
-    return true;//found cycle
+	   //if searched path comes back through an info edge(represents undirected connection)
+	   //no circle 
+	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+	   {
+		   if(p.second==false && (p.first).first==root)
+			   return false;
+	   }
+	   found.push_back(node);
+	   return true;//found cycle
    }
    visited[node]=true;
    if(directed)
@@ -241,7 +255,7 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 		 {  //edge value corresponds  and its a valid directed edge
 			if((p.first).second==value && p.second==true )
 			{
-				if(dsv((p.first).first,value,visited,finished,found))
+				if(dsv((p.first).first,value,visited,finished,found,node))
 				{
 					found.push_back(node);
 					return true;
@@ -249,11 +263,11 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 			}   
 		 }
 		 else
-		 {
+		 {//edge value not important
 					
 			if(p.second==true )
 			{		
-				if(dsv((p.first).first,0,visited,finished,found))
+				if(dsv((p.first).first,0,visited,finished,found,node))
 				{
 					found.push_back(node);
 					return true;
@@ -271,7 +285,7 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 		 {  //edge value corresponds  and its a valid directed edge
 			if((p.first).second==value)
 			{
-				if(dsv((p.first).first,value,visited,finished,found))
+				if(dsv((p.first).first,value,visited,finished,found,node))
 				{
 					found.push_back(node);
 					return true;
@@ -281,7 +295,7 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 		 else
 		 {
 					
-			 if(dsv((p.first).first,0,visited,finished,found))
+			 if(dsv((p.first).first,0,visited,finished,found,node))
 			 {
 				 found.push_back(node);
 				 return true;
@@ -324,7 +338,7 @@ bool Graph::findCircles(int edge_value)
         std::vector<int> found;
         std::vector<bool> visited(N,false);
         std::vector<bool> finished(N,false);
-        ret=dsv(i,edge_value, visited, finished,found);
+        ret=dsv(i,edge_value, visited, finished,found,i);
         if (ret)
         {   
 #ifdef dbg_graph_findcircle
