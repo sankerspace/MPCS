@@ -15,7 +15,21 @@ struct Edge {
 	
 };
 
+
 // class to represent a graph object
+/*********************************************************************************************************
+ *Graph Properties:
+ *	1) Graph can be directed(from start) or undirected(switched), 
+ *		a)Graph initiates only as directed
+ *		b)Graph can be switched to undirected but not vice versa
+ *	2)Every edge has an weight value,holds for directed and undirected
+ *		a)
+ *	3)Undirected Edges are two directed edges in both ways, with the same weight
+ *  4)Directed Edges are defined by an entry in a vector(describes outer edges from a vertex)
+ *		a)every vector represents a vertex, in that vector there a paired entries 
+ *		which represents index of the adjacent vertices and the weighted value to them    
+ *
+ * *****************************************************************************************************/
 class Graph
 {
 private:
@@ -31,13 +45,16 @@ private:
 	*  - 			 if changed from directed mode, only first occurence of a connection relevant
 	*/	
     bool directed;
-    /*recursively search for path and mark as visited */
-    /*if during search we found  a already marked one, return true*/
-	/*XXXXXXXXXXXXXXXXXXXXcheck itXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx*/
+    
 	
 	void insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p);
+	/*recursively search for path and mark as visited */
+    /*if during search we found  a already marked one, return true*/
+	/*XXXXXXXXXXXXXXXXXXXXcheck itXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx*/
     bool dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found,int root);
-	public:
+	
+
+public:
 	// construct a vector of vectors to represent an adjacency list
 	//one vector represents the to a corresponding node adjacent nodes with an id (integer) and 
 	//edge has a value (int)
@@ -51,41 +68,6 @@ private:
 		this->directed=directed;
     };
     
-	/*XXXXXXXXXXXXXXXXXXXXXXXXX TEST XXXXXXXXXXXXXXXXXXXXXXXXXX*/
-	// Graph Constructor
-	//# of nodes = N
-/*	Graph(std::vector<Edge> const &edges, int N,bool directed=true)
-	{
-		this->directed=directed;
-		// resize the vector to N elements of type vector<int>
-		adjList.resize(N);
-        this->N=N;
-		// add edges to the directed graph
-		for (auto &edge: edges)
-		{
-		    std::pair<int,int> pair_1(edge.dest,edge.value);
-		    std::pair<std::pair<int,int>, bool> pair_2(pair_1,true);
-            
-		    std::pair<int,int> pair_3(edge.src,edge.value);
-		    std::pair<std::pair<int,int>, bool> pair_4(pair_3,false);
-			if(directed)
-			{
-				// insert at the end
-				//adjList[edge.src].push_back(edge.dest);
-				adjList[edge.src].push_back(pair);//have to be sorted!!!!!!!!!!!!!!
-
-				this->E++;
-
-			
-			}else
-			{
-			
-			}
-			// Uncomment below line for undirected graph
-			// adjList[edge.dest].push_back(edge.src);
-		}
-	};*/
-	
 	
 	int getNodeNumber(void);
 	int getEdgeNumber(void);	
@@ -99,7 +81,7 @@ private:
     bool findCircles(int edge_value);
 
 	bool getMode(void);
-	bool setDirectedMode(void); //interpret edges as directed
+//	bool setDirectedMode(void); //interpret edges as directed
 	bool setUndirectedMode(void); //interpret edges as undirected
 };
 

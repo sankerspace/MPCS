@@ -2,7 +2,9 @@
 
 
 
-//using namespace std;
+
+// print :
+// STATUS: read X
 void Graph::printTable(void)
 {
 	
@@ -13,15 +15,19 @@ void Graph::printTable(void)
 		std::cout<<i<<": ";
 		for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 		{
-			if((v.first).second==true)
-				std::cout <<" ,(" <<(v.first).first << ","<< (v.first).second <<")"; 		
+			if(v.second==true && this->directed)
+				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
+			else  if(this->directed==false)
+				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
 		}
 		std::cout << std::endl;
 	}
 }
 
-
+/****************************************************/
 // print adjacency list representation of graph
+// STATUS: read X
+ 
 void  Graph::printGraph(void)
 {
 	std::cout << "Display Graph informations:"<< std::endl;
@@ -39,15 +45,15 @@ void  Graph::printGraph(void)
 	}
 
 
-	if(directed==true) 
+	if(directed) 
 	{
 
 		for(unsigned i = 0; i < N; i++)
 		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{
-				if((v.first).second==true)
-					std::cout << i << " -->> " << (v.first).first << " ("<< (v.first).second <<") || "; 		
+				if(v.second==true)
+					std::cout << i << " -->> " << (v.first).first << " ("<< (v.first).second <<") |X| "; 		
 			}
 			std::cout << std::endl;
 		}
@@ -57,7 +63,7 @@ void  Graph::printGraph(void)
 		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{	//maybe duplicated if several same connections !!!!!!!!!!!!!!!!!!!!!!!!!!
-				std::cout << i << " --- " << (v.first).first << " ("<<(v.first).second<<") ||"; 		
+				std::cout << i << " --- " << (v.first).first << " ("<<(v.first).second<<") |X|"; 		
 			}
 
 			std::cout << std::endl;
@@ -71,6 +77,8 @@ void  Graph::printGraph(void)
 
 /**************************************************/
 int Graph::getNodeNumber(void)
+
+// STATUS: read
 {
     #ifdef dbg_graph_getNodeNumber
         std::cout<<"adjList length : "<< adjList.size()<<std::endl;
@@ -80,7 +88,10 @@ int Graph::getNodeNumber(void)
 
 
 /**************************************************/
+// STATUS: read
 int Graph::getEdgeNumber(void)
+// STATUS: read
+	
 {
 	int E;
 	if(directed)
@@ -93,6 +104,8 @@ int Graph::getEdgeNumber(void)
 
 /**************************************************/
 int Graph::addNode(void)
+
+// STATUS: read
 {
 	std::vector<std::pair<std::pair<int,int>,bool>> v;
 	
@@ -102,6 +115,7 @@ int Graph::addNode(void)
 }
 /****************************************************/
 void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
+// STATUS: read
 {
 	
 	if(adjList[index].size()>0 )
@@ -131,6 +145,7 @@ void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 //src -> dst always  stored,whenever directed or undirected mode
 //ŝrc and dst are index values
 int Graph::addEdge(int src,int dst,int value)
+// STATUS: read
 {
     if(src<N && dst < N && value>0 && src!=dst )
     {   
@@ -209,14 +224,16 @@ int Graph::addEdge(int src,int dst,int value)
 /**************************************************/
 
 //returns status of Directed Mode
-bool Graph::setDirectedMode(void)
-{
-	this->directed=true;
-	return true;
-}
+//bool Graph::setDirectedMode(void)
+// STATUS: read
+//{
+//	this->directed=true;
+//	return true;
+//}
 
 //returns status of Directed Mode
 bool Graph::setUndirectedMode(void)
+// STATUS: read
 {
 	this->directed=false;
 	return false;
@@ -224,12 +241,14 @@ bool Graph::setUndirectedMode(void)
 
 
 bool Graph::getMode(void)
+// STATUS: read
 {
 	return this->directed;
 }
 
 /**************************************************/
 bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found,int root)
+// STATUS: read
 {
         
    if (finished[node]==true)
@@ -328,6 +347,7 @@ DFS(v):
 */
 
 bool Graph::findCircles(int edge_value)
+// STATUS: read
 {
     //check for every node
     
