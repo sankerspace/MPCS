@@ -9,10 +9,10 @@ restricted to the same weight(or not = 0).
 
 MPC (Multipartner Communication)
 ---------------------------------
-Intro: N nodes have to communicate among them, therefore N nodes 
+Intro: N nodes need to communicate with each other, therefore N nodes 
 	have to arrange a communication cycle to exchange informations.
-	At every cycle(CommLists repeated) the N nodes communicates 
-	according their Commlists.
+	For every cycle N nodes have to communicate 
+	according to their Commlists(Every node has its own).
         (According to a CommList from node f, 
 	 not all communications to the remaining N-1 nodes have to be defined,
 	 but at least one node)
@@ -115,4 +115,10 @@ MPCs_check:
 				
 	
 					
-		
+Graph:
+	Implementation  of a custom Graph solution, which combines directed and undirected Graphs
+	under one class.More information under Graph.hpp
+BoostGraph:
+	Implementation of custom Graph solution with use of the Boost Graph Library.
+
+

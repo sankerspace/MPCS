@@ -37,7 +37,7 @@ void  Graph::printGraph(void)
 	{
 
 		std::cout << "Direction Mode:"<< "DIRECTED" <<std::endl;
-		std::cout << "Number of Edges: "<<  E_direct << std::endl<< std::endl;
+		std::cout << "Number of Edges: "<<  E_undirect/2 << std::endl<< std::endl;
 	}else{
 
 		std::cout << "Direction Mode:"<< "UNDIRECTED" <<std::endl;
@@ -77,7 +77,8 @@ void  Graph::printGraph(void)
 
 /**************************************************/
 int Graph::getNodeNumber(void)
-// STATUS: read X
+
+// STATUS: read
 {
     #ifdef dbg_graph_getNodeNumber
         std::cout<<"adjList length : "<< adjList.size()<<std::endl;
@@ -87,13 +88,14 @@ int Graph::getNodeNumber(void)
 
 
 /**************************************************/
+// STATUS: read
 int Graph::getEdgeNumber(void)
-// STATUS: read X
+// STATUS: read
 	
 {
 	int E;
 	if(directed)
-		E=E_direct;
+		E=E_undirect/2;
 	else
 		E=E_undirect;
 
@@ -102,7 +104,8 @@ int Graph::getEdgeNumber(void)
 
 /**************************************************/
 int Graph::addNode(void)
-// STATUS: read X
+
+// STATUS: read
 {
 	std::vector<std::pair<std::pair<int,int>,bool>> v;
 	
@@ -112,7 +115,7 @@ int Graph::addNode(void)
 }
 /****************************************************/
 void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
-// STATUS: read x
+// STATUS: read
 {
 	
 	if(adjList[index].size()>0 )
@@ -121,7 +124,7 @@ void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 		for (auto it=adjList[index].begin(); it!=adjList[index].end(); ++it)
 		{
 			if(((*it).first).first >= (p.first).first)
-			{//insert  new  connection on the right place
+			{
 				adjList[index].insert(it,p);
 				inserted_Pair=true;
 			}
@@ -142,70 +145,45 @@ void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 //src -> dst always  stored,whenever directed or undirected mode
 //ŝrc and dst are index values
 int Graph::addEdge(int src,int dst,int value)
-// STATUS: read X
+// STATUS: read
 {
-	int E=0;
     if(src<N && dst < N && value>0 && src!=dst )
     {   
-	/*
-	 * two types of edges:
-	 *	directed edge 
-	 *	info edge: created in opposite direction of the directed edge
-	 *	in case of Mode switch to Undirected Mode, both directions must be available
-	 *
-	 * */	
-		bool first_direct_available=false;
-		bool second_direct_available=false;
 		bool undirected_exists_counterpart=false;	
 		if(directed)
 		{   //only consider directed edge,opposite is for info purpose		
 			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
-			{
+			{//it should be checked if undirected or directed mode
 			 //in "DIRECTED" mode check if edge is available and if edge is undirected and change it to a directed edge 
 				if((p.first).first==dst && (p.first).second==value)
 				{	
 					if(p.second)
 					{//its a directed ede
-						first_direct_available=true;//nothsng changed,return same number of edges
+						return 	E_undirect;//nothing changed,return same number of edges
 					}else
-					{//its an info edge,change it to directed
+					{//its a undirected edge
 						p.second=true;//make edge directed
-						first_direct_available=true;//return same number of edges	
-						E_direct++;//already  counted in  E_undirected
+						return E_undirect;//return same number of edges	
 					}
 				}
 			}
-			for(std::pair<std::pair<int,int>,bool> p: adjList[dst])
-			{
-				//check if there  exist already an opposite edge,  otherwise a info have to be created
-				//for the purposes of a mode switch
-				if((p.first).first==src && (p.first).second==value)
-				{	
-					//edge is available
-					second_direct_available=true;
-				}
-			}
-			if (!first_direct_available)
-			{
-				std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
-				insert_Pair_to_Vector(src,p1);
-				E=(++E_direct);
-				E_undirect++;
-				
-			}
+
+
+			std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),true);
+			std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
 			
-			if(!second_direct_available)
-			{
-				std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
-				insert_Pair_to_Vector(dst,p2);
-				E_undirect++;
-			}
+			insert_Pair_to_Vector(src,p1);
+			insert_Pair_to_Vector(dst,p2);
 		}else{
+			bool first_direct_available=false;
+			bool second_direct_available=false;
 			//check for available edges
 			for(std::pair<std::pair<int,int>,bool> p: adjList[src])
-			{
-				//in UNDIRECTED MODE check if edge already available, may be as directed edge
-				//or as info edge
+			{//it should be checked if undirected or directed mode
+				//in "UNDIRECTED" mode check if edge is  available and change it to directed otherwise
+				//if it is undirected there exists a counterpart which might be directed and should be changed to
+				//undirected
+
 				if((p.first).first==dst && (p.first).second==value)
 				{
 
@@ -215,6 +193,8 @@ int Graph::addEdge(int src,int dst,int value)
 			//check for available edges in the other direction
 			for(std::pair<std::pair<int,int>,bool> p: adjList[dst])
 			{//it should be checked if undirected or directed mode
+				//in "UNDIRECTED" mode check if edge is an info edge and change it to directed otherwise
+				//undirected
 
 				if((p.first).first==src && (p.first).second==value)
 				{
@@ -226,36 +206,42 @@ int Graph::addEdge(int src,int dst,int value)
 			if(first_direct_available==false){
 				std::pair<std::pair<int,int>,bool> p1(std::pair<int,int>(dst,value),false);
 				insert_Pair_to_Vector(src,p1);	
-				E=(++E_undirect);
 			}	
 			if(second_direct_available==false)
 			{
 				std::pair<std::pair<int,int>,bool> p2(std::pair<int,int>(src,value),false);
 				insert_Pair_to_Vector(dst,p2);
-				E=(++E_undirect);
-			}	
 			}
-			
 		}
 		
-        return  E;
+		E_undirect+=2;
+        return  E_undirect;
     }
+    return -2;//index not valid
     
+}
 
 /**************************************************/
 
 //returns status of Directed Mode
+//bool Graph::setDirectedMode(void)
+// STATUS: read
+//{
+//	this->directed=true;
+//	return true;
+//}
+
+//returns status of Directed Mode
 bool Graph::setUndirectedMode(void)
-// STATUS: read X
+// STATUS: read
 {
 	this->directed=false;
 	return false;
 }
 
 
-/**************************************************/
 bool Graph::getMode(void)
-// STATUS: read X
+// STATUS: read
 {
 	return this->directed;
 }
@@ -273,7 +259,7 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 	   //no circle 
 	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
 	   {
-		   if((p.first).first==root && (p.first).second==value)
+		   if(p.second==false && (p.first).first==root)
 			   return false;
 	   }
 	   found.push_back(node);
@@ -384,6 +370,7 @@ bool Graph::findCircles(int edge_value)
 #else
 			return true;
 #endif
+            ret=true;
         }
     }
     

@@ -1,3 +1,11 @@
+/*
+ *AUTHOR : Marko Stanisic
+ *CONTACT: e0325230@student.tuwien.ac.at
+ *
+ *
+ *
+ *
+ * */
 #ifndef _GRAPH_HEADER_
 #define _GRAPH_HEADER_
 
@@ -22,7 +30,8 @@ struct Edge {
  *	1) Graph can be directed(from start) or undirected(switched), 
  *		a)Graph initiates only as directed
  *		b)Graph can be switched to undirected but not vice versa
- *	2)Every edge has an weight value,holds for directed and undirected
+ *		c)Graph is build by an adjacent list,every node stores outgoing edges to another nodes
+ *	2)Every edge  must have a weight value
  *		a)
  *	3)Undirected Edges are two directed edges in both ways, with the same weight
  *  4)Directed Edges are defined by an entry in a vector(describes outer edges from a vertex)
@@ -38,7 +47,7 @@ private:
 	typedef std::pair<std::pair<int,int>,bool> Pair_PairofInt_Bool;
 	std::vector<std::vector<Pair_PairofInt_Bool>> adjList;
 
-    int N,E_undirect; //number of nodes N,edges E
+    int N,E_undirect,E_direct; //number of nodes N,edges E
 	/*mode of the graph - directed or undirected
 	*  - directed: every occurence in the vector handled "as one direction"
 	*  - undirected: ever occurence in the vector handled as a connection(in both ways)
@@ -61,11 +70,12 @@ public:
 		
 
     // Standard Graph Constructor
-    Graph(bool directed=true) 
+    Graph(void) 
     {
         N=0;
+		E_direct=0;
         E_undirect=0;
-		this->directed=directed;
+		this->directed=true;
     };
     
 	

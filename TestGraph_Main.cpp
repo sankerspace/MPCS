@@ -25,7 +25,7 @@ using  namespace std;
   void ClearScreen()
     {
     int n;
-    for (n = 0; n < 10; n++)
+    for (n = 0; n < 5; n++)
       printf( "\n\n\n\n\n\n\n\n\n\n" );
     }
 
@@ -42,7 +42,7 @@ int main(int argc,char** argv) {
 	while(state)
 	{
 	    char c;
-	     //ClearScreen();
+	     ClearScreen();
 	    std::cout<<"Modify Graph with following options:"<< std::endl;
 	    std::cout<<"----------------------------------"<< std::endl;
 	    std::cout<<"new (n)ode"<< std::endl;
@@ -52,7 +52,7 @@ int main(int argc,char** argv) {
 	    std::cout<<"(f)ind Circles"<< std::endl;
 	    std::cout<<"(m)ode change"<< std::endl;
 	    std::cout<<"(c)lose Program"<< std::endl;
-	   
+		std::cout <<std::endl<<std::endl<<std::endl;   
 	   cin >> c;
 	   switch(c)
 	   {
@@ -110,8 +110,8 @@ int main(int argc,char** argv) {
 				 g.setUndirectedMode();
 				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now."<<std::endl;
 			 }else{
-				 g.setDirectedMode();
-				 std::cout<<std::endl<<"Graph in DIRECTED Mode now."<<std::endl;
+				// g.setDirectedMode();
+				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now.Change to DIRTECTED Mode not allowed"<<std::endl;
 			 }
 			 std::cout<<std::endl<<"[ENTER]"<<std::endl;
 	         cin.get();
