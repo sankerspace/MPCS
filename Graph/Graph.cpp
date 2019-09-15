@@ -12,13 +12,13 @@ void Graph::printTable(void)
 	std::cout << "Number of nodes:" << N <<std::endl;
 	for(unsigned i = 0; i < N; i++)
 	{
-		std::cout<<i<<": ";
+		std::cout<<"Node "<< i+1 <<": ";
 		for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 		{
 			if(v.second==true && this->directed)
-				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
+				std::cout <<" ,(" <<(v.first).first+1 << "|"<< (v.first).second <<")"; 		
 			else  if(this->directed==false)
-				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
+				std::cout <<" ,(" <<(v.first).first+1 << "|"<< (v.first).second <<")"; 		
 		}
 		std::cout << std::endl;
 	}
@@ -38,7 +38,7 @@ void  Graph::printGraph(void)
 
 		std::cout << "Direction Mode:"<< "DIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_direct << std::endl<< std::endl;
-	}else{
+	}else{//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! print real node numbers
 
 		std::cout << "Direction Mode:"<< "UNDIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_undirect << std::endl<< std::endl;
@@ -53,7 +53,7 @@ void  Graph::printGraph(void)
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{
 				if(v.second==true)
-					std::cout << i << " -->> " << (v.first).first << " ("<< (v.first).second <<") |X| "; 		
+					std::cout << i+1 << " -->> " << (v.first).first+1 << " ("<< (v.first).second <<") |X| "; 		
 			}
 			std::cout << std::endl;
 		}
@@ -63,7 +63,7 @@ void  Graph::printGraph(void)
 		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{	//maybe duplicated if several same connections !!!!!!!!!!!!!!!!!!!!!!!!!!
-				std::cout << i << " --- " << (v.first).first << " ("<<(v.first).second<<") |X|"; 		
+				std::cout << i+1 << " --- " << (v.first).first+1 << " ("<<(v.first).second<<") |X|"; 		
 			}
 
 			std::cout << std::endl;
@@ -80,47 +80,47 @@ int Graph::getNodeNumber(void)
 // STATUS: read X
 {
     #ifdef dbg_graph_getNodeNumber
-        std::cout<<"adjList length : "<< adjList.size()<<std::endl;
-    #endif
-    return N;
+	std::cout<<"adjList length : "<< adjList.size()<<std::endl;
+#endif
+return N;
 }
 
 
 /**************************************************/
 int Graph::getEdgeNumber(void)
 // STATUS: read X
-	
-{
-	int E;
-	if(directed)
-		E=E_direct;
-	else
-		E=E_undirect;
 
-	return E;
+{
+int E;
+if(directed)
+	E=E_direct;
+else
+	E=E_undirect;
+
+return E;
 }
 
 /**************************************************/
 int Graph::addNode(void)
 // STATUS: read X
 {
-	std::vector<std::pair<std::pair<int,int>,bool>> v;
-	
-    adjList.push_back(v);
-    this->N+=1;
-    return this->N;
+std::vector<std::pair<std::pair<int,int>,bool>> v;
+
+adjList.push_back(v);
+this->N+=1;
+return this->N;
 }
 /****************************************************/
 void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 // STATUS: read x
 {
-	
-	if(adjList[index].size()>0 )
-	{	bool inserted_Pair=false;
-		//examine connection list of a node for already existing edge
-		for (auto it=adjList[index].begin(); it!=adjList[index].end(); ++it)
-		{
-			if(((*it).first).first >= (p.first).first)
+
+if(adjList[index].size()>0 )
+{	bool inserted_Pair=false;
+	//examine connection list of a node for already existing edge
+	for (auto it=adjList[index].begin(); it < adjList[index].end(); ++it)
+	{
+		if(((*it).first).first >= (p.first).first)
 			{//insert  new  connection on the right place
 				adjList[index].insert(it,p);
 				inserted_Pair=true;

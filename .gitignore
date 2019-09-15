@@ -1,7 +1,10 @@
 *.json
 *.swp
 *.swo
-TestGraph
+Graph/TestGraph
+Graph/debug_TestGraph
 *.o
+checkMPCs
+debug_checkMPCs
 
 
