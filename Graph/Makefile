@@ -5,7 +5,9 @@ CFLAGS := -pedantic -Wall -std=c++11 #-O2
 CPPFLAGS := #-DHARDWARE=0
 LDFLAGS := #-lboost_iostream
 CUSTOM:=
-CSRC := $(wildcard *.cpp)
+CSRC:= $(wildcard *.cpp)
+CSRC2:=Graph.cpp TestGraph_Main.cpp
+CSRC3:=BoostGraph.cpp TestBoostGraph_Main.cpp
 #CSRC := $(filter-out TestGraph_Main.cpp, $(CSRC))
 OBJS := $(CSRC:%.c=hostobjs/%.o)
 OBJS_2:= Graph.o  TestGraph_Main.o
@@ -27,13 +29,13 @@ BoostGraph.o: BoostGraph.cpp BoostGraph.hpp
 TestGraph: $(OBJS_2)
 	$(CC) $(CFLAGS) -o $@ $+
 	
-debug_TestGraph:$(OBJS_2)
+debug_TestGraph: $(CSRC2)
 	$(CC) $(HWFLAGS) $(CFLAGS) -g -o $@ $+
 
 TestBoostGraph: $(OBJS_3)
 	$(CC) $(CFLAGS) -o $@ $+
 	
-debug_TestBoostGraph:$(OBJS_3)
+debug_TestBoostGraph:$(CSRC3)
 	$(CC) $(HWFLAGS) $(CFLAGS) -g -o $@ $+
 
 .PHONY: clean

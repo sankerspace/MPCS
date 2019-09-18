@@ -42,7 +42,7 @@ void  Graph::printGraph(void)
 
 		std::cout << "Direction Mode:"<< "DIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_direct << std::endl<< std::endl;
-	}else{
+	}else{//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! print real node numbers
 
 		std::cout << "Direction Mode:"<< "UNDIRECTED" <<std::endl;
 		std::cout << "Number of Edges: "<<  E_undirect << std::endl<< std::endl;
@@ -84,35 +84,35 @@ int Graph::getNodeNumber(void)
 // STATUS: read X
 {
     #ifdef dbg_graph_getNodeNumber
-        std::cout<<"adjList length : "<< adjList.size()<<std::endl;
-    #endif
-    return N;
+	std::cout<<"adjList length : "<< adjList.size()<<std::endl;
+#endif
+return N;
 }
 
 
 /**************************************************/
 int Graph::getEdgeNumber(void)
 // STATUS: read X
-	
-{
-	int E;
-	if(directed)
-		E=E_direct;
-	else
-		E=E_undirect;
 
-	return E;
+{
+int E;
+if(directed)
+	E=E_direct;
+else
+	E=E_undirect;
+
+return E;
 }
 
 /**************************************************/
 int Graph::addNode(void)
 // STATUS: read X
 {
-	std::vector<std::pair<std::pair<int,int>,bool>> v;
-	
-    adjList.push_back(v);
-    this->N+=1;
-    return this->N;
+std::vector<std::pair<std::pair<int,int>,bool>> v;
+
+adjList.push_back(v);
+this->N+=1;
+return this->N;
 }
 /****************************************************/
 void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
