@@ -5,6 +5,7 @@
 
 // print :
 // STATUS: read X
+// print  Node  Numbers beginning with 1
 void Graph::printTable(void)
 {
 	
@@ -12,22 +13,25 @@ void Graph::printTable(void)
 	std::cout << "Number of nodes:" << N <<std::endl;
 	for(unsigned i = 0; i < N; i++)
 	{
-		std::cout<<i<<": ";
+		std::cout<<(i+1)<<": ";
 		for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 		{
 			if(v.second==true && this->directed)
-				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
+				std::cout <<" ,(" <<((v.first).first+1) << "|"<< (v.first).second <<")"; 		
 			else  if(this->directed==false)
-				std::cout <<" ,(" <<(v.first).first << "|"<< (v.first).second <<")"; 		
+				std::cout <<" ,(" <<((v.first).first+1) << "|"<< (v.first).second <<")"; 		
 		}
 		std::cout << std::endl;
 	}
 }
 
+
+
+
 /****************************************************/
 // print adjacency list representation of graph
 // STATUS: read X
- 
+// print  Node  Numbers beginning with 1
 void  Graph::printGraph(void)
 {
 	std::cout << "Display Graph informations:"<< std::endl;
@@ -53,7 +57,7 @@ void  Graph::printGraph(void)
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{
 				if(v.second==true)
-					std::cout << i << " -->> " << (v.first).first << " ("<< (v.first).second <<") |X| "; 		
+					std::cout << i+1 << " -->> " << ((v.first).first+1) << " ("<< (v.first).second <<") |X| "; 		
 			}
 			std::cout << std::endl;
 		}
@@ -63,7 +67,7 @@ void  Graph::printGraph(void)
 		{
 			for (std::pair<std::pair<int,int>,bool> v : adjList[i])
 			{	//maybe duplicated if several same connections !!!!!!!!!!!!!!!!!!!!!!!!!!
-				std::cout << i << " --- " << (v.first).first << " ("<<(v.first).second<<") |X|"; 		
+				std::cout << i+1 << " --- " << ((v.first).first+1) << " ("<<(v.first).second<<") |X|"; 		
 			}
 
 			std::cout << std::endl;
@@ -118,7 +122,7 @@ void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
 	if(adjList[index].size()>0 )
 	{	bool inserted_Pair=false;
 		//examine connection list of a node for already existing edge
-		for (auto it=adjList[index].begin(); it!=adjList[index].end(); ++it)
+		for (auto it=adjList[index].begin(); it<adjList[index].end(); ++it)
 		{
 			if(((*it).first).first >= (p.first).first)
 			{//insert  new  connection on the right place
@@ -271,11 +275,11 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
    {
 	   //if searched path comes back through an info edge(represents undirected connection)
 	   //no circle 
-	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+	   /*for (std::pair<std::pair<int,int>,bool> p: adjList[node])
 	   {
 		   if((p.first).first==root && (p.first).second==value)
 			   return false;
-	   }
+	   }*/
 	   found.push_back(node);
 	   return true;//found cycle
    }
@@ -303,7 +307,7 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 				if(dsv((p.first).first,0,visited,finished,found,node))
 				{
 					found.push_back(node);
-					return true;
+				return true;
 				}
 			}
 		 
@@ -314,27 +318,31 @@ bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>
 	   /************* UNDIRECTED **********************/
 	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
 	   {
-		 if(value>0)//if edge value important
-		 {  //edge value corresponds  and its a valid directed edge
-			if((p.first).second==value)
-			{
-				if(dsv((p.first).first,value,visited,finished,found,node))
-				{
-					found.push_back(node);
-					return true;
-				}
-			}   
-		 }
-		 else
-		 {
-					
-			 if(dsv((p.first).first,0,visited,finished,found,node))
-			 {
-				 found.push_back(node);
-				 return true;
-			 }
-		 
-		 }
+
+		   if(value>0)//if edge value important
+		   {  //edge value corresponds  and its a valid directed edge
+
+			   if((p.first).second==value && (p.first).first!=root)
+			   {
+				   if(dsv((p.first).first,value,visited,finished,found,node))
+				   {
+					   found.push_back(node);
+					   return true;
+				   }
+			   }   
+		   }
+		   else
+		   {
+			   if((p.first).first!=root)//in undirected mode only one edge relevant between two points
+			   {
+				   if(dsv((p.first).first,0,visited,finished,found,node))
+				   {
+					   found.push_back(node);
+					   return true;
+				   }
+			   }
+
+		   }
 	   }
    }
    finished[node]=true; 
@@ -359,6 +367,7 @@ DFS(v):
     DFS(w)
   finished(v) = true  
 */
+//Debug output: Nodes start fom Node 1:w
 
 bool Graph::findCircles(int edge_value)
 // STATUS: read
@@ -372,14 +381,15 @@ bool Graph::findCircles(int edge_value)
         std::vector<int> found;
         std::vector<bool> visited(N,false);
         std::vector<bool> finished(N,false);
+		std::cout<<"Start Node "<<(i+1)<<"  ";
         ret=dsv(i,edge_value, visited, finished,found,i);
         if (ret)
         {   
 #ifdef dbg_graph_findcircle
-            std::cout << "Graph::findCircles::found circle with edge_value "<< edge_value <<  
-				"from node "<< i << "::";
+            std::cout <<"Graph::findCircles::found circle with edge_value "<< edge_value <<  
+				" from node "<< (i+1) << "::";
             for (std::vector<int>::const_iterator j = found.begin(); j != found.end(); ++j)
-                std::cout << *j << ' ';
+                std::cout << *j+1 << ' ';
             std::cout << std::endl;
 #else
 			return true;
