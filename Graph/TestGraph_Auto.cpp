@@ -3,11 +3,15 @@
 #include "Graph.hpp"
 #include <iostream>
 #include "boost/filesystem.hpp"
-#include "boost/filesystem/fstream.hpp"
+#include "boost/filesystem/fstream.hpp"		
+#include <boost/algorithm/string.hpp> 
 #include <iostream>
 
 
+
 using  namespace std;
+
+namespace fs=boost::filesystem;
 
 #ifdef __cplusplus__
 
@@ -42,9 +46,8 @@ int main(int argc,char** argv) {
 	
 	bool state=true;
 	Graph g;
+    std::string line;
     std::string f;
-	std::istringstream()
-	namespace fs=boost::filesystem;
 	std::cout<<"Filename: ";std::cin>>f;
 	fs::path p{f.c_str() };
 	if (!exists(p))    // does path p actually exist?
@@ -53,97 +56,66 @@ int main(int argc,char** argv) {
 		return -1 ;
 	}
 		
-	
+		
 	fs::ifstream ifs{ p };
-	ifs.getline():w
+	
+	while(std::getline(ifs,line))
+	{
+		/* 
+		   node
+		   edge x y w
+		   print graph
+		   print table
+		   mode
+		   find w
+		   close
+		*/
+		std::vector<std::string> token;
+		boost::split(token,line , boost::is_any_of(" ")); 		
+		std::vector<std::string>::size_type len=token.size();
+		if(len==1)
+		{
+			string str = token[0];
+			if(str.compare("node"))
+			{
+				g.addNode();
+				std::cout<<"Added a new node. Current Number of Nodes "<<g.getNodeNumber() <<std::endl;
+
+			}else if(str.compare("undirected"))
+			{
+				g.setUndirectedMode();
+				std::cout<<"Set to Undirected Mode. "<<std::endl;
+
+			}else if(str.compare("close"))
+			{
+				break;	
+			}
+		}else if (len==2)
+		{
+			if(token[0].compare("print"))	
+			{
+				if(token[1].compare("graph"))
+				{
+					g.printGraph();
+				}else if(token[1].compare("table"))
+				{
+					g.printTable();
+				}	
+			}else if(token[0].compare("find"))
+			{
+				std::stringstream ss(token[1]);
+				int w=0;
+				ss>>w;
+			
+			}
+		}else if(len==3)
+		{
+		
+		}
 
 	
-	while(state)
-	{
-	    char c;
-	     //ClearScreen();
-	    std::cout<<"Modify Graph with following options:"<< std::endl;
-	    std::cout<<"----------------------------------"<< std::endl;
-	    std::cout<<"new (n)ode"<< std::endl;
-	    std::cout<<"new (e)dge"<< std::endl;
-	    std::cout<<"(p)rint Graph"<< std::endl;
-	    std::cout<<"print (t)able"<< std::endl;
-	    std::cout<<"(f)ind Circles"<< std::endl;
-	    std::cout<<"(m)ode change"<< std::endl;
-	    std::cout<<"(c)lose Program"<< std::endl;
-		std::cout <<std::endl<<std::endl<<std::endl;   
-	   cin >> c;
-	   switch(c)
-	   {
-	    case 'n':
-	        g.addNode();
-	        std::cout<<"\tNew Node created,number of nodes are "<< g.getNodeNumber()<< " [ENTER]"<<std::endl;
-	        cin.get();
-	        break;
-	    case 'e':
-	        int src,dst,value;
-	        std::cout<<"\tEnter src node:";std::cin>>src;std::cout<<endl;
-	        std::cout<<"\tEnter dst node:";std::cin>>dst;std::cout<<endl;
-	        std::cout<<"\tEnter edge value:";std::cin>>value;std::cout<<endl;
-	        g.addEdge((src-1),(dst-1),value);
-	        std::cout<<"\tNew Edge created,number of edges are "<< g.getEdgeNumber()<< " [ENTER]"<<std::endl;
-	        cin.get();
-	        break;
-	    
-	    case 't':
-	         g.printTable();
-	         std::cout<<std::endl<<"[ENTER]"<<std::endl;
-	         cin.get();
-	        break;
-	        
-	    case 'p':
-	         g.printGraph();
-	         std::cout<<std::endl<<"[ENTER]"<<std::endl;
-	         cin.get();
-	        break;
-	        
-	    case 'f':
-	        {
-	        int edge_value=0;
-	        bool ret=false;
-			std::cout<<"\tSearch for cycles in the current defined Graph."<<std::endl;
-	        std::cout<<"\tCycles are searched explicit on edges wit specified edge value."<<std::endl;
-	        std::cout<<"\tEnter defined weight for all edges:[0 ignore edge values]"<<std::endl;
-	        std::cin>>edge_value;
-	        std::cout<<endl;
-	        ret=g.findCircles(edge_value);
-	        if(ret)
-	        {
-	           std::cout<<"FOUND CIRCLE!!"<<std::endl;
-	        }else{
-	           std::cout<<"No circle found!!"<<std::endl;
-	        }
-	        std::cout<<std::endl<<"[ENTER]"<<std::endl;
-	        cin.get();
-	        }
-	        break;
-	        
-	    case 'm':
-	         std::cout<<std::endl<<"Changing Mode..... "<<std::endl;
-			 if(g.getMode()){
-				 g.setUndirectedMode();
-				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now."<<std::endl;
-			 }else{
-				// g.setDirectedMode();
-				 std::cout<<std::endl<<"Graph in UNDIRECTED Mode now.Change to DIRTECTED Mode not allowed"<<std::endl;
-			 }
-			 std::cout<<std::endl<<"[ENTER]"<<std::endl;
-	         cin.get();
-	        break;
-	        
-	    case 'c':
-	         state=false;
-	        break;
-	    default:
-	        break;
-	   } 
-	
-	}
-  
+//	   cin >> c;
+
+	}  
   	return 0;
 }
