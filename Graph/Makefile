@@ -3,15 +3,18 @@ CC := g++
 HWFLAGS := -march=native -Q -v 
 CFLAGS := -pedantic -Wall -std=c++11 #-O2
 CPPFLAGS := #-DHARDWARE=0
-LDFLAGS := #-lboost_iostream
+#LDFLAGS := -lboost_iostream -lboost_filesystem
+BOOST:= -lboost_filesystem
 CUSTOM:=
 CSRC:= $(wildcard *.cpp)
 CSRC2:=Graph.cpp TestGraph_Main.cpp
 CSRC3:=BoostGraph.cpp TestBoostGraph_Main.cpp
+CSRC4:=Graph.cpp TestGraph_Auto.cpp
 #CSRC := $(filter-out TestGraph_Main.cpp, $(CSRC))
 OBJS := $(CSRC:%.c=hostobjs/%.o)
 OBJS_2:= Graph.o  TestGraph_Main.o
 OBJS_3:=BoostGraph.o  TestBoostGraph_Main.o
+OBJS_4:=Graph.o  TestGraph_Auto.o
 HDRS := $(wildcard *.hpp)
 
 .PHONY: all
@@ -38,9 +41,16 @@ TestBoostGraph: $(OBJS_3)
 debug_TestBoostGraph:$(CSRC3)
 	$(CC) $(HWFLAGS) $(CFLAGS) -g -o $@ $+
 
+TestAutoGraph: $(OBJS_4)
+	$(CC) $(CFLAGS) -o $@ $+ $(BOOST)
+	
+debug_TestAutotGraph:$(CSRC4)
+	$(CC) $(HWFLAGS) $(CFLAGS) -g -o $@ $+ $(BOOST)
+
 .PHONY: clean
 clean:
-	rm -rf  TestGraph *.o  TestBoostGraph   debug_TestGraph  debug_TestBoostGraph 
+	rm -rf  TestGraph *.o  TestBoostGraph TestAutoGraph  debug_TestGraph  debug_TestBoostGraph debug_TestAutotGraph
+
 
 
 

@@ -381,7 +381,10 @@ bool Graph::findCircles(int edge_value)
         std::vector<int> found;
         std::vector<bool> visited(N,false);
         std::vector<bool> finished(N,false);
+		
+#ifdef dbg_graph_findcircle
 		std::cout<<"Start Node "<<(i+1)<<"  ";
+#endif
         ret=dsv(i,edge_value, visited, finished,found,i);
         if (ret)
         {   
@@ -392,8 +395,10 @@ bool Graph::findCircles(int edge_value)
                 std::cout << *j+1 << ' ';
             std::cout << std::endl;
 #else
+			
 			return true;
 #endif
+			std::cout << std::endl;	
         }
     }
     

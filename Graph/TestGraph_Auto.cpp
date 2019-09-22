@@ -2,14 +2,14 @@
 
 #include "Graph.hpp"
 #include <iostream>
-#include "boost/filesystem.hpp"
-#include "boost/filesystem/fstream.hpp"		
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>		
 #include <boost/algorithm/string.hpp> 
-#include <iostream>
+#include <sstream>
 
 
 
-using  namespace std;
+//using  namespace std;
 
 namespace fs=boost::filesystem;
 
@@ -47,94 +47,130 @@ int main(int argc,char** argv) {
 	try
 	{
 		bool state=true;
+
 		Graph g;
 		std::string line;
 		std::string f;
-		std::cout<<"Filename: ";std::cin>>f;
+		if(argc==2)
+		{
+			f=std::string(argv[1]);
+		}else
+		{
+			std::cout<<"Filename: ";std::cin>>f;
+		}
 		fs::path p{f.c_str() };
-		if (!exists(p))    // does path p actually exist?
+		if (!fs::exists(p))    // does path p actually exist?
 		{
 			std::cout<< "ERROR::File doesnt exist!"<<std::endl;
 			return -1 ;
 		}
-
+		int line_number=1;
 
 		fs::ifstream ifs{ p };
 
 		while(std::getline(ifs,line))
 		{
+			//std::cout<<line<<" ";
 			/* 
 			   node
+			   
 			   edge x y w
 			   print graph
 			   print table
+			   print number nodes
+			   print number edges
 			   undirected
 			   find circle w
 			   close
 			   */
+			bool valid=false;
 			std::vector<std::string> token;
 			boost::split(token,line , boost::is_any_of(" ")); 		
 			std::vector<std::string>::size_type len=token.size();
+
 			if(len==1)
 			{
-				string str = token[0];
-				if(str.compare("node"))
+				std::string str = token[0];
+				if(str.compare("node")==0)
 				{
 					g.addNode();
-					std::cout<<"Added a new node. Current Number of Nodes "<<g.getNodeNumber() <<std::endl;
-
-				}else if(str.compare("undirected"))
+					std::cout<<"Added a new node. Current Number of Nodes "<<g.getNodeNumber() <<std::endl;	
+					valid=true;
+				}else if(str.compare("undirected")==0)
 				{
 					g.setUndirectedMode();
 					std::cout<<"Set to Undirected Mode. "<<std::endl;
+					valid=true;
 
-				}else if(str.compare("close"))
+				}else if(str.compare("close")==0)
 				{
 					break;	
 				}
 			}else if (len==2)
 			{
-				if(token[0].compare("print"))	
+				if(token[0].compare("print")==0)	
 				{
-					if(token[1].compare("graph"))
+					if(token[1].compare("graph")==0)
 					{
 						g.printGraph();
-					}else if(token[1].compare("table"))
+						valid=true;
+					}else if(token[1].compare("table")==0)
 					{
 						g.printTable();
+						valid=true;
 					}	
 				} 
 			}else if(len==3)
 			{
-				if(token[0].compare("find") && token[1].compare("circle") && is_number(token[2]))
+				
+				if(token[0].compare("print")==0)	
 				{
-					std::stringstream ss(token[1]);
-					int w=0;
-					ss>>w;
-					if(ss.fail())
+					if(token[1].compare("number")==0)
 					{
-						std::cout<<"ERROR::Reading number from string failed!"<<std::endl;
-					}
-					std::cout<<"Find a circle in "<<(g.getMode()?"directed":"undirected") <<" Graph."<<std::endl;
-					g.findCircles(w);		
+						if(token[2].compare("nodes")==0)
+						{
+							std::cout<<"NUMBER OF NODES: "<<g.getNodeNumber()<<std::endl;
+							valid=true;
+
+						}	
+						else if(token[2].compare("edges")==0)
+						{
+							std::cout<<"NUMBER OF EDGES: "<<g.getEdgeNumber()<<std::endl;
+							valid=true;
+						}	
+						
+					}				} 
+				if(token[0].compare("find")==0 && token[1].compare("circle")==0 && is_number(token[2]))
+				{
+
+					int w=std::stoi(token[2]);
+					std::cout<<"Try to find a circle in "<<(g.getMode()?"directed":"undirected") <<" Graph."<<std::endl;
+					bool ret=g.findCircles(w);		
+					std::cout<<(ret?"\tFOUND A CIRCLE in current Graph":"\tNO CIRCLE FOUND.")<<std::endl;
+					valid=true;
 				}
 
 			}else if(len==4)
 			{
 
-				if(token[0].compare("edge") &&  is_number(token[1]) && is_number(token[2]) &&  is_number(token[3]))
+				if(token[0].compare("edge")==0 &&  is_number(token[1]) && is_number(token[2]) &&  is_number(token[3]))
 				{
-					int s1=std::stoi(token[1]);
-					int s2=std::stoi(token[2]);
+					int s1=std::stoi(token[1])-1;
+					int s2=std::stoi(token[2])-1;
 					int s3=std::stoi(token[3]);
-
-					std::cout<<"Inserting a new EDGE from Node "<<s1<< " to Node "<<s2<< "with weight "<<s3<< std::endl;
-					g.addEdge(s1,s2,s3);
+					if(s1>=0  && s2>=0 && s3>=0)
+					{
+						std::cout<<"Inserting a new EDGE from Node "<<s1<< " to Node "<<s2<< " with weight "<<s3<< std::endl;
+						g.addEdge(s1,s2,s3);
+						valid=true;
+					}
 				}		 
 
 			}
+			if(!valid)  std::cout<<"ERROR::Input  at line number "<<line_number<<" in file "<< f <<" is not valid."<<std::endl;
+			line_number++;
 		}  
-	}catch(exception& e)
+	}catch(std::exception& e)
 	{
 		std::cout<<"ERROR::Exception happend!"<<std::endl;
 		std::cout<<"\t"<<e.what()<<std::endl;
@@ -143,6 +179,6 @@ int main(int argc,char** argv) {
 	{
 		std::cout<<"ERROR::Unknown Exception happend!"<<std::endl;
 	}
-
-		return 0;
+	std::cout<<std::endl;
+	return 0;
 }

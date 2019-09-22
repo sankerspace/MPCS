@@ -14,8 +14,8 @@
 #include <boost/filesystem.hpp>
 
 
-#define dbg_graph_getNodeNumber
-#define dbg_graph_findcircle
+//#define dbg_graph_getNodeNumber
+//#define dbg_graph_findcircle
 
 // data structure to store graph edges
 struct Edge {
