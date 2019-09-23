@@ -1,0 +1,13 @@
+##Kommentarew
+node
+node
+node
+edge 1 2 1
+edge 1 3 1
+edge 2 3 1
+edge 3 2 1
+print graph
+undirected
+print graph
+close
+

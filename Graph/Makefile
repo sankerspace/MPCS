@@ -44,12 +44,12 @@ debug_TestBoostGraph:$(CSRC3)
 TestAutoGraph: $(OBJS_4)
 	$(CC) $(CFLAGS) -o $@ $+ $(BOOST)
 	
-debug_TestAutotGraph:$(CSRC4)
+debug_TestAutoGraph:$(CSRC4)
 	$(CC) $(HWFLAGS) $(CFLAGS) -g -o $@ $+ $(BOOST)
 
 .PHONY: clean
 clean:
-	rm -rf  TestGraph *.o  TestBoostGraph TestAutoGraph  debug_TestGraph  debug_TestBoostGraph debug_TestAutotGraph
+	rm -rf  TestGraph *.o  TestBoostGraph TestAutoGraph  debug_TestGraph  debug_TestBoostGraph debug_TestAutoGraph
 
 
 

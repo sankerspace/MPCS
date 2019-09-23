@@ -6,10 +6,21 @@ edge 1 2 100
 edge 2 3 100
 edge 1 3 100
 find circle 100
-undirected
-find circle 100
 print graph
 edge 1 4 100
 find circle 100
+edge 4 3 100
+find circle 100
+print graph
+undirected
+print table
+edge 1 2 50
+edge 2 3 50
+edge 4 1 50
+print table
+find circle 50
+edge 3 4 50
+find circle 50
+print graph
 close
 

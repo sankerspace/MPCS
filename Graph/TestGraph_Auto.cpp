@@ -70,6 +70,8 @@ int main(int argc,char** argv) {
 
 		while(std::getline(ifs,line))
 		{
+			if (line[0]=='#') continue;
+
 			//std::cout<<line<<" ";
 			/* 
 			   node
@@ -94,12 +96,12 @@ int main(int argc,char** argv) {
 				if(str.compare("node")==0)
 				{
 					g.addNode();
-					std::cout<<"Added a new node. Current Number of Nodes "<<g.getNodeNumber() <<std::endl;	
+					std::cout<<"++Added a new node. Current Number of Nodes "<<g.getNodeNumber() <<"+++++++++++++"<<std::endl;	
 					valid=true;
 				}else if(str.compare("undirected")==0)
 				{
 					g.setUndirectedMode();
-					std::cout<<"Set to Undirected Mode. "<<std::endl;
+					std::cout<<"++Set to Undirected Mode. "<<std::endl;
 					valid=true;
 
 				}else if(str.compare("close")==0)
@@ -129,13 +131,13 @@ int main(int argc,char** argv) {
 					{
 						if(token[2].compare("nodes")==0)
 						{
-							std::cout<<"NUMBER OF NODES: "<<g.getNodeNumber()<<std::endl;
+							std::cout<<"++NUMBER OF NODES: "<<g.getNodeNumber()<<"+++++++"<<std::endl;
 							valid=true;
 
 						}	
 						else if(token[2].compare("edges")==0)
 						{
-							std::cout<<"NUMBER OF EDGES: "<<g.getEdgeNumber()<<std::endl;
+							std::cout<<"++NUMBER OF EDGES: "<<g.getEdgeNumber()<<"++++++++"<<std::endl;
 							valid=true;
 						}	
 						
@@ -144,9 +146,11 @@ int main(int argc,char** argv) {
 				{
 
 					int w=std::stoi(token[2]);
-					std::cout<<"Try to find a circle in "<<(g.getMode()?"directed":"undirected") <<" Graph."<<std::endl;
+					std::cout<<"+++Try to find a circle in "<<(g.getMode()?"directed":"undirected") <<" Graph with weight "<<w<<".++++"<<std::endl;
 					bool ret=g.findCircles(w);		
-					std::cout<<(ret?"\tFOUND A CIRCLE in current Graph":"\tNO CIRCLE FOUND.")<<std::endl;
+					std::stringstream ss;
+					ss<<"\tFOUND A CIRCLE in current Graph with weight "<<w<<"."; 
+					std::cout<<(ret?(ss.str()) :"\tNO CIRCLE FOUND.")<<std::endl;
 					valid=true;
 				}
 
@@ -160,7 +164,7 @@ int main(int argc,char** argv) {
 					int s3=std::stoi(token[3]);
 					if(s1>=0  && s2>=0 && s3>=0)
 					{
-						std::cout<<"Inserting a new EDGE from Node "<<s1<< " to Node "<<s2<< " with weight "<<s3<< std::endl;
+					std::cout<<"++++Inserting a new EDGE from Node "<<s1+1<< " to Node "<<s2+1<< " with weight "<<s3<<"++++"<< std::endl;
 						g.addEdge(s1,s2,s3);
 						valid=true;
 					}
