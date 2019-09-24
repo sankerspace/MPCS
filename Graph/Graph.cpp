@@ -8,7 +8,7 @@
 // print  Node  Numbers beginning with 1
 void Graph::printTable(void)
 {
-	
+
 	std::cout << "Display Connection Table" << std::endl;
 	std::cout << "Number of nodes:" << N <<std::endl;
 	for(unsigned i = 0; i < N; i++)
@@ -79,42 +79,42 @@ void  Graph::printGraph(void)
 
 /**************************************************/
 int Graph::getNodeNumber(void)
-// STATUS: read X
+	// STATUS: read X
 {
-    #ifdef dbg_graph_getNodeNumber
-std::cout<<"adjList length : "<< adjList.size()<<std::endl;
+#ifdef dbg_graph_getNodeNumber
+	std::cout<<"adjList length : "<< adjList.size()<<std::endl;
 #endif
-return N;
+	return N;
 }
 
 
 /**************************************************/
 int Graph::getEdgeNumber(void)
-// STATUS: read X
+	// STATUS: read X
 
 {
-int E;
-if(directed)
-E=E_direct;
-else
-E=E_undirect;
+	int E;
+	if(directed)
+		E=E_direct;
+	else
+		E=E_undirect;
 
-return E;
+	return E;
 }
 
 /**************************************************/
 int Graph::addNode(void)
-// STATUS: read X
+	// STATUS: read X
 {
-std::vector<std::pair<std::pair<int,int>,bool>> v;
+	std::vector<std::pair<std::pair<int,int>,bool>> v;
 
-adjList.push_back(v);
-this->N+=1;
-return this->N;
+	adjList.push_back(v);
+	this->N+=1;
+	return this->N;
 }
 /****************************************************/
 void Graph::insert_Pair_to_Vector(int index,Pair_PairofInt_Bool p)
-// STATUS: read x
+	// STATUS: read x
 {
 
 	if(adjList[index].size()>0 )
@@ -266,7 +266,7 @@ int Graph::addEdge(int src,int dst,int value)
 
 //returns status of Directed Mode
 bool Graph::setUndirectedMode(void)
-// STATUS: read X
+	// STATUS: read X
 {
 	this->directed=false;
 	return false;
@@ -275,150 +275,150 @@ bool Graph::setUndirectedMode(void)
 
 /**************************************************/
 bool Graph::getMode(void)
-// STATUS: read X
+	// STATUS: read X
 {
 	return this->directed;
 }
 
 /**************************************************/
 bool Graph::dsv(int node,int value, std::vector<bool>& visited,std::vector<bool>& finished,std::vector<int>& found,int root)
-// STATUS: read
+	// STATUS: read
 {
-        
-   if (finished[node]==true)
-    return false;
-   if (visited[node]==true)
-   {
-	   //if searched path comes back through an info edge(represents undirected connection)
-	   //no circle 
-	   /*for (std::pair<std::pair<int,int>,bool> p: adjList[node])
-	   {
-		   if((p.first).first==root && (p.first).second==value)
-			   return false;
-	   }*/
-	   found.push_back(node);
-	   return true;//found cycle
-   }
-   visited[node]=true;
-   if(directed)
-   {/************* DIRECTED **********************/
-	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
-	   {
-		 if(value>0)//if edge value important
-		 {  //edge value corresponds  and its a valid directed edge
-			if((p.first).second==value && p.second==true )
-			{
-				if(dsv((p.first).first,value,visited,finished,found,node))
+
+	if (finished[node]==true)
+		return false;
+	if (visited[node]==true)
+	{
+		//if searched path comes back through an info edge(represents undirected connection)
+		//no circle 
+		/*for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+		  {
+		  if((p.first).first==root && (p.first).second==value)
+		  return false;
+		  }*/
+		found.push_back(node);
+		return true;//found cycle
+	}
+	visited[node]=true;
+	if(directed)
+	{/************* DIRECTED **********************/
+		for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+		{
+			if(value>0)//if edge value important
+			{  //edge value corresponds  and its a valid directed edge
+				if((p.first).second==value && p.second==true )
 				{
-					found.push_back(node);
-					return true;
-				}
-			}   
-		 }
-		 else
-		 {//edge value not important
-					
-			if(p.second==true )
-			{		
-				if(dsv((p.first).first,0,visited,finished,found,node))
-				{
-					found.push_back(node);
-				return true;
-				}
+					if(dsv((p.first).first,value,visited,finished,found,node))
+					{
+						found.push_back(node);
+						return true;
+					}
+				}   
 			}
-		 
-		 }
-	   }
-   }else
-   {
-	   /************* UNDIRECTED **********************/
-	   for (std::pair<std::pair<int,int>,bool> p: adjList[node])
-	   {
+			else
+			{//edge value not important
 
-		   if(value>0)//if edge value important
-		   {  //edge value corresponds  and its a valid directed edge
+				if(p.second==true )
+				{		
+					if(dsv((p.first).first,0,visited,finished,found,node))
+					{
+						found.push_back(node);
+						return true;
+					}
+				}
 
-			   if((p.first).second==value && (p.first).first!=root)
-			   {
-				   if(dsv((p.first).first,value,visited,finished,found,node))
-				   {
-					   found.push_back(node);
-					   return true;
-				   }
-			   }   
-		   }
-		   else
-		   {
-			   if((p.first).first!=root)//in undirected mode only one edge relevant between two points
-			   {
-				   if(dsv((p.first).first,0,visited,finished,found,node))
-				   {
-					   found.push_back(node);
-					   return true;
-				   }
-			   }
+			}
+		}
+	}else
+	{
+		/************* UNDIRECTED **********************/
+		for (std::pair<std::pair<int,int>,bool> p: adjList[node])
+		{
 
-		   }
-	   }
-   }
-   finished[node]=true; 
-   return false; 
+			if(value>0)//if edge value important
+			{  //edge value corresponds  and its a valid directed edge
+
+				if((p.first).second==value && (p.first).first!=root)
+				{
+					if(dsv((p.first).first,value,visited,finished,found,node))
+					{
+						found.push_back(node);
+						return true;
+					}
+				}   
+			}
+			else
+			{
+				if((p.first).first!=root)//in undirected mode only one edge relevant between two points
+				{
+					if(dsv((p.first).first,0,visited,finished,found,node))
+					{
+						found.push_back(node);
+						return true;
+					}
+				}
+
+			}
+		}
+	}
+	finished[node]=true; 
+	return false; 
 }
 
 
 
 /*
-*https://de.wikipedia.org/wiki/Zyklus_(Graphentheorie)
-*Für jeden Knoten v: visited(v) = false, finished(v) = false
-Für jeden Knoten v:
-  DFS(v)
-  
-DFS(v):
-  if finished(v)
-    return
-  if visited(v)
-    "Zyklus gefunden" und Abbruch
-  visited(v) = true
-  für jeden Nachfolger w
-    DFS(w)
-  finished(v) = true  
-*/
+ *https://de.wikipedia.org/wiki/Zyklus_(Graphentheorie)
+ *Für jeden Knoten v: visited(v) = false, finished(v) = false
+ Für jeden Knoten v:
+ DFS(v)
+
+ DFS(v):
+ if finished(v)
+ return
+ if visited(v)
+ "Zyklus gefunden" und Abbruch
+ visited(v) = true
+ für jeden Nachfolger w
+ DFS(w)
+ finished(v) = true  
+ */
 //Debug output: Nodes start fom Node 1:w
 
 bool Graph::findCircles(int edge_value)
-// STATUS: read
+	// STATUS: read
 {
-    //check for every node
-    
-    
-    bool ret=false;
-    for (unsigned i = 0; i < N; i++)
-    {
-        std::vector<int> found;
-        std::vector<bool> visited(N,false);
-        std::vector<bool> finished(N,false);
-		
+	//check for every node
+
+
+	bool ret=false;
+	for (unsigned i = 0; i < N; i++)
+	{
+		std::vector<int> found;
+		std::vector<bool> visited(N,false);
+		std::vector<bool> finished(N,false);
+
 #ifdef dbg_graph_findcircle
 		std::cout<<"Start Node "<<(i+1)<<"  ";
 #endif
-        ret=dsv(i,edge_value, visited, finished,found,i);
-        if (ret)
-        {   
+		ret=dsv(i,edge_value, visited, finished,found,i);
+		if (ret)
+		{   
 #ifdef dbg_graph_findcircle
-            std::cout <<"Graph::findCircles::found circle with edge_value "<< edge_value <<  
+			std::cout <<"Graph::findCircles::found circle with edge_value "<< edge_value <<  
 				" from node "<< (i+1) << "::";
-            for (std::vector<int>::const_iterator j = found.begin(); j != found.end(); ++j)
-                std::cout << *j+1 << ' ';
-            std::cout << std::endl;
+			for (std::vector<int>::const_iterator j = found.begin(); j != found.end(); ++j)
+				std::cout << *j+1 << ' ';
+			std::cout << std::endl;
 #else
-			
+
 			return true;
 #endif
 			std::cout << std::endl;	
-        }
-    }
-    
-    return ret;
+		}
+	}
+
+	return ret;
 }
 
 
