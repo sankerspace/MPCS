@@ -113,12 +113,15 @@ MPCs_check:
 		 ------------->	| 4 |<--------------   
 
 				
-	
+SUB PROJECTS
+------------------	
 					
-Graph:
+Graph:(Version 1.0 - Build 1)
 	Implementation  of a custom Graph solution, which combines directed and undirected Graphs
 	under one class.More information under Graph.hpp
-BoostGraph:
+	This represents a custom solution.
+BoostGraph:(Plan Phase -  not Implemented)
 	Implementation of custom Graph solution with use of the Boost Graph Library.
+Generator:
 
 
