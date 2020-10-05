@@ -1,4 +1,4 @@
-Graph(TestGraph):
+Graph(TestGraph) v1.0
 -----------------
 A class which handles creation of nodes and edges of a graph "on-the-fly",
 that means that after initiating a class there are no nodes and edges 
@@ -7,7 +7,7 @@ at the beginning. Every edge must have a value(or weight).
 function dsv() searches for a "circle" from a node with edges on that circle 
 restricted to the same weight(or not = 0).
 
-MPC (Multipartner Communication)
+MPC (Multipartner Communication) v0.6
 ---------------------------------
 Intro: N nodes need to communicate with each other, therefore N nodes 
 	have to arrange a communication cycle to exchange informations.
